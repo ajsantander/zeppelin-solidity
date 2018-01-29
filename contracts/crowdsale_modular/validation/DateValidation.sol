@@ -1,11 +1,11 @@
-pragma solidity ^0.4.19;
+pragma solidity ^0.4.18;
 
-import "../Crowdsale";
+import "../ModularCrowdsale.sol";
 
-contract DateValidation is Crowdsale {
+contract DateValidation is ModularCrowdsale {
 	
 	function DateValidation() {
-		addValidationCondition(validate);
+		addValidation(validate);
 	}
 
 	function validate() view returns (bool) {

@@ -1,13 +1,13 @@
-pragma solidity ^0.4.19;
+pragma solidity ^0.4.18;
 
-import "../Crowdsale";
+import "../ModularCrowdsale.sol";
 
-contract WeiCapValidation is Crowdsale {
+contract WeiCapValidation is ModularCrowdsale {
 	
 	uint256 totalRaisedCap;
 
 	function WeiCapValidation(uint256 _cap) public {
-		addValidationCondition(validate);
+		addValidation(validate);
 	}
 
 	function validate() view returns (bool) {

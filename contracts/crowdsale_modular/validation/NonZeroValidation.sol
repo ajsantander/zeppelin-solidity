@@ -1,11 +1,11 @@
-pragma solidity ^0.4.19;
+pragma solidity ^0.4.18;
 
-import "../Crowdsale";
+import "../ModularCrowdsale.sol";
 
-contract NonZeroValidation is Crowdsale {
+contract NonZeroValidation is ModularCrowdsale {
 
 	function NonZeroValidation() {
-		addValidationCondition(validate);
+		addValidation(validate);
 	}
 
 	function validate() view returns (bool) {

@@ -1,11 +1,13 @@
-pragma solidity ^0.4.19;
+pragma solidity ^0.4.18;
 
-contract WhitelistValidation is Crowdsale {
+import "../ModularCrowdsale.sol";
+
+contract WhitelistValidation is ModularCrowdsale {
 
 	mapping(address => bool) whitelist;
 	
 	function WhitelistValidation() {
-		addValidationCondition(validate);
+		addValidation(validate);
 	}
 
 	function addToWhitelist(address user) {

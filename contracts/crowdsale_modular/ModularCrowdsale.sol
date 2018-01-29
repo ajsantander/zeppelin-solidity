@@ -3,7 +3,6 @@ pragma solidity ^0.4.18;
 import "../token/ERC20/MintableToken.sol";
 import "../math/SafeMath.sol";
 
-
 contract ModularCrowdsale {
 
   using SafeMath for uint256;
@@ -77,18 +76,18 @@ contract ModularCrowdsale {
     return now > endTime;
   }
 
-	// ----------------------------------------------------------------
-	// Pricing module
-	// ----------------------------------------------------------------
+  // ----------------------------------------------------------------
+  // Pricing module
+  // ----------------------------------------------------------------
 
   // Override this method to have a way to add business logic to your crowdsale when buying
   function getTokenAmount(uint256 weiAmount) internal view returns(uint256) {
     return weiAmount.mul(rate);
   }
 
-	// ----------------------------------------------------------------
-	// Fund distribution module
-	// ----------------------------------------------------------------
+  // ----------------------------------------------------------------
+  // Fund distribution module
+  // ----------------------------------------------------------------
 
   // send ether to the fund collection wallet
   // override to create custom fund forwarding mechanisms
@@ -96,26 +95,25 @@ contract ModularCrowdsale {
     wallet.transfer(msg.value);
   }
 
-	// ----------------------------------------------------------------
-	// Token distribution module
-	// ----------------------------------------------------------------
+  // ----------------------------------------------------------------
+  // Token distribution module
+  // ----------------------------------------------------------------
 
+  // ----------------------------------------------------------------
+  // Validation module
+  // ----------------------------------------------------------------
 
-	// ----------------------------------------------------------------
-	// Validation module
-	// ----------------------------------------------------------------
+  function() view returns (bool)[] validations;
 
-	function() view returns (bool)[] validations;
-
-	function addValidation(function() view returns (bool) validation) {
-		validations.push(validation);
-	}
+  function addValidation(function() view returns (bool) validation) internal {
+    validations.push(validation);
+  }
 
   // @return true if the transaction can buy tokens
   function validPurchase() internal view returns (bool) {
     for(uint i = 0; i < validations.length; i++) {
-			if(!validations[i]()) return false;
-		}
-		return true;
+      if(!validations[i]()) return false;
+    }
+    return true;
   }
 }
