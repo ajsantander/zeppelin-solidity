@@ -64,8 +64,9 @@ contract Crowdsale {
 
   // low level token purchase function
   function buyTokens(address beneficiary) public payable {
-    require(beneficiary != address(0));
-    require(validPurchase());
+    // require(beneficiary != address(0));
+    // require(validPurchase());
+    preValidatePurchase(beneficiary, msg.value);
 
     uint256 weiAmount = msg.value;
 
@@ -79,6 +80,7 @@ contract Crowdsale {
     TokenPurchase(msg.sender, beneficiary, weiAmount, tokens);
 
     forwardFunds();
+    postValidatePurchase();
   }
 
   // @return true if crowdsale event has ended
@@ -97,11 +99,20 @@ contract Crowdsale {
     wallet.transfer(msg.value);
   }
 
-  // @return true if the transaction can buy tokens
-  function validPurchase() internal view returns (bool) {
-    bool withinPeriod = now >= startTime && now <= endTime;
-    bool nonZeroPurchase = msg.value != 0;
-    return withinPeriod && nonZeroPurchase;
+  function preValidatePurchase(address beneficiary, uint256 weiAmount) internal {
+    require(beneficiary != address(0));
+    require(now >= startTime && now <= endTime);
+    require(msg.value != 0);
   }
 
+  function postValidatePurchase() internal {
+    // override
+  }
+  
+  // @return true if the transaction can buy tokens
+  // function validPurchase() internal view returns (bool) {
+  //   bool withinPeriod = now >= startTime && now <= endTime;
+  //   bool nonZeroPurchase = msg.value != 0;
+  //   return withinPeriod && nonZeroPurchase;
+  // }
 }
