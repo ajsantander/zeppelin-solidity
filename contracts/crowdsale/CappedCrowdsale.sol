@@ -32,8 +32,8 @@ contract CappedCrowdsale is Crowdsale {
   //   return withinCap && super.validPurchase();
   // }
 
-  function postValidatePurchase() internal {
-    super.postValidatePurchase();
+  function postValidatePurchase(address _beneficiary, uint256 _weiAmount) internal {
+    super.postValidatePurchase(_beneficiary, _weiAmount);
     require(weiRaised <= cap);
   }
 

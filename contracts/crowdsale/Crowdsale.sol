@@ -66,9 +66,9 @@ contract Crowdsale {
   function buyTokens(address beneficiary) public payable {
     // require(beneficiary != address(0));
     // require(validPurchase());
-    preValidatePurchase(beneficiary, msg.value);
 
     uint256 weiAmount = msg.value;
+    preValidatePurchase(beneficiary, weiAmount);
 
     // calculate token amount to be created
     uint256 tokens = getTokenAmount(weiAmount);
@@ -80,7 +80,7 @@ contract Crowdsale {
     TokenPurchase(msg.sender, beneficiary, weiAmount, tokens);
 
     forwardFunds();
-    postValidatePurchase();
+    postValidatePurchase(beneficiary, weiAmount);
   }
 
   // @return true if crowdsale event has ended
@@ -99,13 +99,13 @@ contract Crowdsale {
     wallet.transfer(msg.value);
   }
 
-  function preValidatePurchase(address beneficiary, uint256 weiAmount) internal {
-    require(beneficiary != address(0));
+  function preValidatePurchase(address _beneficiary, uint256 _weiAmount) internal {
+    require(_beneficiary != address(0));
     require(now >= startTime && now <= endTime);
-    require(msg.value != 0);
+    require(_weiAmount != 0);
   }
 
-  function postValidatePurchase() internal {
+  function postValidatePurchase(address beneficiary, uint256 weiAmount) internal {
     // override
   }
   

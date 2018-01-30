@@ -7,20 +7,20 @@ contract WhitelistedCrowdsale is Crowdsale, Ownable {
   
   mapping(address => bool) public whitelist;
 
-  function addToWhitelist(address beneficiary) external onlyOwner {
-    whitelist[beneficiary] = true;
+  function addToWhitelist(address _beneficiary) external onlyOwner {
+    whitelist[_beneficiary] = true;
   }
 
-  function removeFromWhitelist(address beneficiary) external onlyOwner {
-    whitelist[beneficiary] = false;
+  function removeFromWhitelist(address _beneficiary) external onlyOwner {
+    whitelist[_beneficiary] = false;
   }
 
-  function isWhitelisted(address beneficiary) public view returns (bool) {
-    return whitelist[beneficiary];
+  function isWhitelisted(address _beneficiary) public view returns (bool) {
+    return whitelist[_beneficiary];
   }
 
-  function preValidatePurchase(address beneficiary, uint256 weiAmount) internal {
-    super.preValidatePurchase(beneficiary, weiAmount);
-    require(isWhitelisted(beneficiary));
+  function preValidatePurchase(address _beneficiary, uint256 _weiAmount) internal {
+    super.preValidatePurchase(_beneficiary, _weiAmount);
+    require(isWhitelisted(_beneficiary));
   }
 }
