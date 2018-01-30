@@ -23,6 +23,8 @@ contract ModularCrowdsale {
   // amount of raised money in wei
   uint256 public weiRaised;
 
+	mapping(address => uint256) contributions;
+
   /**
    * event for token purchase logging
    * @param purchaser who paid for the tokens
@@ -64,20 +66,38 @@ contract ModularCrowdsale {
 
     // update state
     weiRaised = weiRaised.add(weiAmount);
-
     token.mint(beneficiary, tokens);
     TokenPurchase(msg.sender, beneficiary, weiAmount, tokens);
+
+    // register contribution
+    contributions[msg.sender] = contributions[msg.sender].add(weiAmount);
 
     forwardFunds();
   }
 
+  // ----------------------------------------------------------------
+  // Finalization module
+  // Module that determines when a crowdsale has finished.
+  // ----------------------------------------------------------------
+
+  function() view returns (bool)[] finalizations;
+
+  function addFinalization(function() view returns (bool) finalization) internal {
+    finalizations.push(finalization);
+  }
+
   // @return true if crowdsale event has ended
   function hasEnded() public view returns (bool) {
-    return now > endTime;
+    if(now > endTime) return true;
+    for(uint i = 0; i < finalizations.length; i++) {
+      if(finalizations[i]()) return true;
+    }
+    return false;
   }
 
   // ----------------------------------------------------------------
   // Pricing module
+  // Module that determines how ETH is converted to token amounts.
   // ----------------------------------------------------------------
 
   // Override this method to have a way to add business logic to your crowdsale when buying
@@ -87,6 +107,7 @@ contract ModularCrowdsale {
 
   // ----------------------------------------------------------------
   // Fund distribution module
+  // Module that determines how raised funds are managed.
   // ----------------------------------------------------------------
 
   // send ether to the fund collection wallet
@@ -97,10 +118,15 @@ contract ModularCrowdsale {
 
   // ----------------------------------------------------------------
   // Token distribution module
+  // Module that determines how the tokens of a purchase are 
+  // distributed to the users.
   // ----------------------------------------------------------------
+
+  // TODO
 
   // ----------------------------------------------------------------
   // Validation module
+  // Module that determines wether a purchase is authorized.
   // ----------------------------------------------------------------
 
   function() view returns (bool)[] validations;
@@ -111,6 +137,8 @@ contract ModularCrowdsale {
 
   // @return true if the transaction can buy tokens
   function validPurchase() internal view returns (bool) {
+    if(now < startTime || now > endTime) return false;
+    if(msg.value <= 0) return false;
     for(uint i = 0; i < validations.length; i++) {
       if(!validations[i]()) return false;
     }

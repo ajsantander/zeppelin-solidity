@@ -35,7 +35,7 @@ contract('ModularCrowdsale', function ([_, investor, wallet, purchaser]) {
     await this.token.transferOwnership(this.crowdsale.address);
   });
 
-  it.only('should be token owner', async function () {
+  it('should be token owner', async function () {
     const owner = await this.token.owner();
     owner.should.equal(this.crowdsale.address);
   });
