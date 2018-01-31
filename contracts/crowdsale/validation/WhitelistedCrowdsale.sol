@@ -1,9 +1,9 @@
 pragma solidity ^ 0.4.18;
 
-import "../Crowdsale.sol";
+import "../CrowdsaleBase.sol";
 import "../../ownership/Ownable.sol";
 
-contract WhitelistedCrowdsale is Crowdsale, Ownable {
+contract WhitelistedCrowdsale is CrowdsaleBase, Ownable {
   
   mapping(address => bool) public whitelist;
 

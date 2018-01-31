@@ -1,10 +1,10 @@
 pragma solidity ^0.4.18;
 
 
-import "../crowdsale/FinalizableCrowdsale.sol";
+import "../crowdsale/distribution/FinalizableCrowdsale.sol";
+import "../crowdsale/distribution/MintedCrowdsale.sol";
 
-
-contract FinalizableCrowdsaleImpl is FinalizableCrowdsale {
+contract FinalizableCrowdsaleImpl is FinalizableCrowdsale, MintedCrowdsale {
 
   function FinalizableCrowdsaleImpl (
     uint256 _startTime,
@@ -13,8 +13,7 @@ contract FinalizableCrowdsaleImpl is FinalizableCrowdsale {
     address _wallet,
     MintableToken _token
   ) public
-    Crowdsale(_startTime, _endTime, _rate, _wallet, _token)
-  {
-  }
-
+    CrowdsaleBase(_startTime, _endTime, _rate, _wallet)
+    MintedCrowdsale(_token)
+  {}
 }

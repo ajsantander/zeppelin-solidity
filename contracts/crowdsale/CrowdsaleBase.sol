@@ -14,7 +14,7 @@ import "../math/SafeMath.sol";
  * minted as contributions arrive, note that the crowdsale contract
  * must be owner of the token in order to be able to mint it.
  */
-contract Crowdsale {
+contract CrowdsaleBase {
   using SafeMath for uint256;
 
   // The token being sold
@@ -43,7 +43,7 @@ contract Crowdsale {
   event TokenPurchase(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount);
 
 
-  function Crowdsale(uint256 _startTime, uint256 _endTime, uint256 _rate, address _wallet) public {
+  function CrowdsaleBase(uint256 _startTime, uint256 _endTime, uint256 _rate, address _wallet) public {
     require(_startTime >= now);
     require(_endTime >= _startTime);
     require(_rate > 0);
@@ -75,16 +75,14 @@ contract Crowdsale {
     // update state
     weiRaised = weiRaised.add(weiAmount);
 
-    processPurchase(beneficiary, tokenAmount);
+    processPurchase(beneficiary, tokens);
     TokenPurchase(msg.sender, beneficiary, weiAmount, tokens);
 
     forwardFunds();
     postValidatePurchase(beneficiary, weiAmount);
   }
 
-  function distributeTokens(address beneficiary, uint256 tokenAmount) internal {
-    // override
-  }
+  function processPurchase(address _beneficiary, uint256 _tokenAmount) internal;
 
   // @return true if crowdsale event has ended
   function hasEnded() public view returns (bool) {

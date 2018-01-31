@@ -1,10 +1,10 @@
 pragma solidity ^0.4.18;
 
 
-import "../crowdsale/CappedCrowdsale.sol";
+import "../crowdsale/validation/CappedCrowdsale.sol";
+import "../crowdsale/distribution/MintedCrowdsale.sol";
 
-
-contract CappedCrowdsaleImpl is CappedCrowdsale {
+contract CappedCrowdsaleImpl is CappedCrowdsale, MintedCrowdsale {
 
   function CappedCrowdsaleImpl (
     uint256 _startTime,
@@ -14,9 +14,8 @@ contract CappedCrowdsaleImpl is CappedCrowdsale {
     uint256 _cap,
     MintableToken _token
   ) public
-    Crowdsale(_startTime, _endTime, _rate, _wallet, _token)
+    CrowdsaleBase(_startTime, _endTime, _rate, _wallet)
     CappedCrowdsale(_cap)
-  {
-  }
-
+    MintedCrowdsale(_token)
+  {}
 }

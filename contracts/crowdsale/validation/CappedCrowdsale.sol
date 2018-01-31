@@ -1,14 +1,14 @@
 pragma solidity ^0.4.18;
 
 import "../../math/SafeMath.sol";
-import "../Crowdsale.sol";
+import "../CrowdsaleBase.sol";
 
 
 /**
  * @title CappedCrowdsale
  * @dev Extension of Crowdsale with a max amount of funds raised
  */
-contract CappedCrowdsale is Crowdsale {
+contract CappedCrowdsale is CrowdsaleBase {
   using SafeMath for uint256;
 
   uint256 public cap;
