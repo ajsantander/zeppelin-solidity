@@ -1,6 +1,6 @@
 pragma solidity ^0.4.18;
 
-import "../token/ERC20/MintableToken.sol";
+// import "../token/ERC20/MintableToken.sol";
 import "../math/SafeMath.sol";
 
 
@@ -10,7 +10,7 @@ import "../math/SafeMath.sol";
  * Crowdsales have a start and end timestamps, where investors can make
  * token purchases and the crowdsale will assign them tokens based
  * on a token per ETH rate. Funds collected are forwarded to a wallet
- * as they arrive. The contract requires a MintableToken that will be
+ * as they arrive. The contract requires a StandardToken that will be
  * minted as contributions arrive, note that the crowdsale contract
  * must be owner of the token in order to be able to mint it.
  */
@@ -18,7 +18,7 @@ contract Crowdsale {
   using SafeMath for uint256;
 
   // The token being sold
-  MintableToken public token;
+  // MintableToken public token;
 
   // start and end timestamps where investments are allowed (both inclusive)
   uint256 public startTime;
@@ -43,18 +43,17 @@ contract Crowdsale {
   event TokenPurchase(address indexed purchaser, address indexed beneficiary, uint256 value, uint256 amount);
 
 
-  function Crowdsale(uint256 _startTime, uint256 _endTime, uint256 _rate, address _wallet, MintableToken _token) public {
+  function Crowdsale(uint256 _startTime, uint256 _endTime, uint256 _rate, address _wallet) public {
     require(_startTime >= now);
     require(_endTime >= _startTime);
     require(_rate > 0);
     require(_wallet != address(0));
-    require(_token != address(0));
+    // require(_token != address(0));
 
     startTime = _startTime;
     endTime = _endTime;
     rate = _rate;
     wallet = _wallet;
-    token = _token;
   }
 
   // fallback function can be used to buy tokens
@@ -76,11 +75,15 @@ contract Crowdsale {
     // update state
     weiRaised = weiRaised.add(weiAmount);
 
-    token.mint(beneficiary, tokens);
+    processPurchase(beneficiary, tokenAmount);
     TokenPurchase(msg.sender, beneficiary, weiAmount, tokens);
 
     forwardFunds();
     postValidatePurchase(beneficiary, weiAmount);
+  }
+
+  function distributeTokens(address beneficiary, uint256 tokenAmount) internal {
+    // override
   }
 
   // @return true if crowdsale event has ended
