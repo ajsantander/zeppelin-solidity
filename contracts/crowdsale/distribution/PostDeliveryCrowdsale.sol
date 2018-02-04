@@ -3,7 +3,7 @@ pragma solidity ^0.4.18;
 import "../CrowdsaleBase.sol";
 import "../../token/ERC20/ERC20.sol";
 
-contract LockedCrowdsale is CrowdsaleBase {
+contract PostDeliveryCrowdsale is CrowdsaleBase {
   
   mapping(address => uint256) promised;
 
@@ -16,6 +16,6 @@ contract LockedCrowdsale is CrowdsaleBase {
     uint256 amount = promises[msg.sender];
     require(amount > 0);
     promises[msg.sender] = 0;
-    super.processPurchase(msg.sender, amount);
+    emitTokens(msg.sender, amount);
   }
 }

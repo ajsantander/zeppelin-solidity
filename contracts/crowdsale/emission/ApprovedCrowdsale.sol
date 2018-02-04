@@ -1,9 +1,9 @@
 pragma solidity ^0.4.18;
 
-import "../CrowdsaleBase.sol";
+import "../Crowdsale.sol";
 import "../../token/ERC20/ERC20.sol";
 
-contract ApprovedCrowdsale is CrowdsaleBase {
+contract ApprovedCrowdsale is Crowdsale {
   
   ERC20 public token;
   address public tokenOwner;
@@ -17,7 +17,7 @@ contract ApprovedCrowdsale is CrowdsaleBase {
 
   // TODO: consider querying approval left and end crowdsale if depleted 
 
-  function processPurchase(address _beneficiary, uint256 _tokenAmount) internal {
+  function emitTokens(address _beneficiary, uint256 _tokenAmount) internal {
     token.transferFrom(tokenOwner, _beneficiary, _tokenAmount);
   }
 }

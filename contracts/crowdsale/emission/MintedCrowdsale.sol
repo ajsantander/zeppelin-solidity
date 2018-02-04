@@ -12,7 +12,7 @@ contract MintedCrowdsale is CrowdsaleBase {
     token = _token;
   }
 
-  function processPurchase(address _beneficiary, uint256 _tokenAmount) internal {
+  function emitTokens(address _beneficiary, uint256 _tokenAmount) internal {
     token.mint(_beneficiary, _tokenAmount);
   }
 }
